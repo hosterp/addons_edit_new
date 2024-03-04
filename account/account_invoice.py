@@ -1308,7 +1308,7 @@ class account_invoice_line(models.Model):
     price_subtotal = fields.Float(string='Amount', digits= dp.get_precision('Account'),
         store=True, readonly=True, compute='_compute_price')
     quantity = fields.Float(string='Quantity', digits= dp.get_precision('Product Unit of Measure'),
-        required=True, default=1)
+        required=True)
     discount = fields.Float(string='Discount (%)', digits= dp.get_precision('Discount'),
         default=0.0)
     invoice_line_tax_id = fields.Many2many('account.tax',
