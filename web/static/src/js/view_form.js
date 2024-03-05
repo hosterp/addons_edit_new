@@ -805,6 +805,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             if (!confirm(_t("Warning, the record has been modified, your changes will be discarded.\n\nAre you sure you want to leave this page ?"))) {
                 return false;
             }
+            $('.oe_form_button_save').trigger('click');
+
             this.$el.removeClass('oe_form_dirty');
         }
         return true;
