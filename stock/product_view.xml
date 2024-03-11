@@ -11,8 +11,8 @@
                     <attribute name="colors" translation="off">red:virtual_available&lt;0;blue:virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete');black:virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')</attribute>
                 </tree>
                 <field name="price" position="after">
-                    <field name="qty_available"/>
-                    <field name="virtual_available"/>
+                    <field name="qty_available" />
+                    <field name="virtual_available" />
                 </field>
             </field>
         </record>
@@ -26,8 +26,8 @@
                     <attribute name="colors" translation="off">red:virtual_available&lt;0;blue:virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete');black:virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')</attribute>
                 </tree>
                 <field name="uom_id" position="after">
-                    <field name="qty_available"/>
-                    <field name="virtual_available"/>
+                    <field name="qty_available" invisible="1"/>
+                    <field name="virtual_available" invisible="1"/>
                 </field>
             </field>
         </record>
