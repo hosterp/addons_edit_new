@@ -234,7 +234,7 @@ class account_invoice(models.Model):
         help="It indicates that the invoice has been sent.")
     date_invoice = fields.Date(string='Invoice Date',
         readonly=True, states={'draft': [('readonly', False)]}, index=True,
-        help="Keep empty to use the current date", copy=False)
+        help="Keep empty to use the current date", copy=False,default=fields.Date.today())
     date_due = fields.Date(string='Due Date',
         readonly=True, states={'draft': [('readonly', False)]}, index=True, copy=False,
         help="If you use payment terms, the due date will be computed automatically at the generation "
