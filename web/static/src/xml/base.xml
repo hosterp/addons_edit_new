@@ -845,7 +845,7 @@
         <span class="oe_form_buttons_edit">
             <button type="button" class="oe_button oe_form_button_save oe_highlight" accesskey="S">Save</button>
             <span class="oe_fade">or</span>
-            <a href="#" class="oe_bold oe_form_button_cancel" accesskey="D">Discard</a>
+            <a href="#" class="oe_bold oe_form_button_cancel" accesskey="D">Delete</a>
         </span>
     </t>
 </div>
