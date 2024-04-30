@@ -191,6 +191,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.$buttons.on('click', '.oe_form_button_save_create',
                          this.guard_active(this.on_save_and_create));
         this.$buttons.on('click', '.oe_form_button_cancel',
+                         this.guard_active(this.on_button_cancel));
+        this.$buttons.on('click', '.oe_form_button_delete',
                          this.guard_active(this.on_button_delete));
         if (this.options.footer_to_buttons) {
             this.$el.find('footer').appendTo(this.$buttons);
