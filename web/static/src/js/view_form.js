@@ -745,37 +745,29 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     on_save_and_create: function(e) {
         var self = this;
-
-        // Disable the button to prevent multiple clicks
+        var confirmMessage = "Do you want to save and create a new record?";
+        if (!confirm(confirmMessage)) {
+            return;
+        }
         $(e.target).attr("disabled", true);
-
-        // Save the data
         return this.save().done(function(result) {
-            // Trigger the "save" event
             self.trigger("save", result);
-
-            // Reload the data and enable the button after reload
             self.reload().always(function() {
                 $(e.target).attr("disabled", false);
             }).then(function() {
-                // Switch to view mode
                 self.to_view_mode();
-
-                // Reload the need action in the menu
                 var menu = instance.webclient.menu;
                 if (menu) {
                     menu.do_reload_needaction();
                 }
-
-                // Reset the dataset index and show the form
                 self.dataset.index = null;
                 self.do_show();
             });
         }).fail(function() {
-            // Enable the button in case of failure
             $(e.target).attr("disabled", false);
         });
     },
+
 
     on_button_cancel: function(event) {
         var self = this;
