@@ -253,16 +253,56 @@
                         field.$el.attr('data-fieldname', field_name);
                         fields[field_name] = field;
                         self.fields_for_resize.push({field: field, cell: cell});
-                    }, options).then(function () {
-                        $recordRow.addClass('oe_edition');
-                        self.resize_fields();
-                        var focus_field = options && options.focus_field ? options.focus_field : undefined;
-                        if (!focus_field){
-                            focus_field = _.find(self.editor.form.fields_order, function(field){ return fields[field] && fields[field].$el.is(':visible:has(input)'); });
+                //  last row fixed here start
+                        },options).then(function () {
+                        // Debugging: Check if $recordRow is valid and has the correct element
+                        console.log('Record row:', $recordRow);
+
+                        if ($recordRow && $recordRow.length) {
+                            $recordRow.addClass('oe_edition');
+                        } else {
+                            console.error('Record row is not found or is undefined:', $recordRow);
                         }
-                        if (focus_field  && fields[focus_field]) fields[focus_field].$el.find('input').select();
+
+                        // Call resize_fields method and check its execution
+                        self.resize_fields();
+
+                        // Determine which field should receive focus
+                        var focus_field = options && options.focus_field ? options.focus_field : undefined;
+                        if (!focus_field) {
+                            focus_field = _.find(self.editor.form.fields_order, function (field) {
+                                return fields[field] && fields[field].$el.is(':visible:has(input)');
+                            });
+                        }
+
+                        // Debugging: Check which field is being focused
+                        console.log('Focus field:', focus_field);
+
+                        if (focus_field && fields[focus_field]) {
+                            var inputElement = fields[focus_field].$el.find('input');
+                            console.log('Input element to select:', inputElement);
+
+                            if (inputElement.length) {
+                                inputElement.select();
+                            } else {
+                                console.error('Input element not found for field:', focus_field);
+                            }
+                        }
+
                         return record.attributes;
                     });
+                  //  last row fixed here ends
+
+//                    }, options).then(function () {
+//                        $recordRow.addClass('oe_edition');
+//                        self.resize_fields();
+//                        var focus_field = options && options.focus_field ? options.focus_field : undefined;
+//                        if (!focus_field){
+//                            focus_field = _.find(self.editor.form.fields_order, function(field){ return fields[field] && fields[field].$el.is(':visible:has(input)'); });
+//                        }
+//                        if (focus_field  && fields[focus_field]) fields[focus_field].$el.find('input').select();
+//                        return record.attributes;
+//                    });
                 }).fail(function () {
                     // if the start_edition event is cancelled and it was a
                     // creation, remove the newly-created empty record
@@ -274,11 +314,25 @@
         },
         get_cells_for: function ($row) {
             var cells = {};
-            $row.children('td').each(function (index, el) {
-                cells[el.getAttribute('data-field')] = el;
-            });
+            console.log('Row:', $row);
+            if ($row && $row.length) {
+                $row.children('td').each(function (index, el) {
+                    console.log('Cell:', el);
+                    cells[el.getAttribute('data-field')] = el;
+                });
+            } else {
+                console.error('Invalid row:', $row);
+            }
             return cells;
         },
+
+//        get_cells_for: function ($row) {
+//            var cells = {};
+//            $row.children('td').each(function (index, el) {
+//                cells[el.getAttribute('data-field')] = el;
+//            });
+//            return cells;
+//        },
         /**
          * If currently editing a row, resizes all registered form fields based
          * on the corresponding row cell
