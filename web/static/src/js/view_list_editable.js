@@ -256,12 +256,12 @@
                 //  last row fixed here start
                         },options).then(function () {
                         // Debugging: Check if $recordRow is valid and has the correct element
-                        console.log('Record row:', $recordRow);
+//                        console.log('Record row:', $recordRow);
 
                         if ($recordRow && $recordRow.length) {
                             $recordRow.addClass('oe_edition');
                         } else {
-                            console.error('Record row is not found or is undefined:', $recordRow);
+//                            console.error('Record row is not found or is undefined:', $recordRow);
                         }
 
                         // Call resize_fields method and check its execution
@@ -280,12 +280,12 @@
 
                         if (focus_field && fields[focus_field]) {
                             var inputElement = fields[focus_field].$el.find('input');
-                            console.log('Input element to select:', inputElement);
+//                            console.log('Input element to select:', inputElement);
 
                             if (inputElement.length) {
                                 inputElement.select();
                             } else {
-                                console.error('Input element not found for field:', focus_field);
+//                                console.error('Input element not found for field:', focus_field);
                             }
                         }
 
@@ -314,10 +314,10 @@
         },
         get_cells_for: function ($row) {
             var cells = {};
-            console.log('Row:', $row);
+//            console.log('Row:', $row);
             if ($row && $row.length) {
                 $row.children('td').each(function (index, el) {
-                    console.log('Cell:', el);
+//                    console.log('Cell:', el);
                     cells[el.getAttribute('data-field')] = el;
                 });
             } else {

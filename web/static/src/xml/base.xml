@@ -38,6 +38,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <button type="button" class="btn btn-default btn-minimize">Min</button>
+                    <button type="button" class="btn btn-default btn-maximize">Max</button>
                     <h3 class="modal-title"><t t-raw="title"/></h3>
                 </div>
                 <div class="modal-body">

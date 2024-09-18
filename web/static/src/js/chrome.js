@@ -67,22 +67,6 @@ instance.web.client_actions.add("action_warn", "instance.web.action_warn");
 */
 instance.web.Dialog = instance.web.Widget.extend({
     dialog_title: "",
-    /**
-        Constructor.
-
-        @param {Widget} parent
-        @param {dictionary} options A dictionary that will be forwarded to jQueryUI Dialog. Additionaly, that
-            dictionary can contain the following keys:
-            - size: one of the following: 'large', 'medium', 'small'
-            - dialogClass: class to add to the body of dialog
-            - buttons: Deprecated. The buttons key is not propagated to jQueryUI Dialog. It must be a dictionary (key = button
-                label, value = click handler) or a list of dictionaries (each element in the dictionary is send to the
-                corresponding method of a jQuery element targeting the <button> tag). It is deprecated because all dialogs
-                in OpenERP must be personalized in some way (button in red, link instead of button, ...) and this
-                feature does not allow that kind of personalization.
-            - destroy_on_close: Default true. If true and the dialog is closed, it is automatically destroyed.
-        @param {jQuery object} content Some content to replace this.$el .
-    */
     init: function (parent, options, content) {
         var self = this;
         this._super(parent);
@@ -105,43 +89,30 @@ instance.web.Dialog = instance.web.Widget.extend({
             this._super();
         }
     },
-    /**
-        Opens the popup. Inits the dialog if it is not already inited.
-
-        @return this
-    */
     open: function() {
         if (!this.dialog_inited) {
             this.init_dialog();
         }
         this.$buttons.insertAfter(this.$dialog_box.find(".modal-body"));
         $('.tooltip').remove(); //remove open tooltip if any to prevent them staying when modal is opened
-        //add to list of currently opened modal
         opened_modal.push(this.$dialog_box);
+
+        // Maximize and Minimize event listeners
+        this.$dialog_box.find('.btn-maximize').on('click', this._maximize.bind(this));
+        this.$dialog_box.find('.btn-minimize').on('click', this._minimize.bind(this));
+
         return this;
     },
-    _add_buttons: function(buttons) {
-        var self = this;
-        var $customButons = this.$buttons.find('.oe_dialog_custom_buttons').empty();
-        _.each(buttons, function(fn, text) {
-            // buttons can be object or array
-            var oe_link_class = fn.oe_link_class;
-            if (!_.isFunction(fn)) {
-                text = fn.text;
-                fn = fn.click;
-            }
-            var $but = $(QWeb.render('WidgetButton', { widget : { string: text, node: { attrs: {'class': oe_link_class} }}}));
-            $customButons.append($but);
-            $but.on('click', function(ev) {
-                fn.call(self.$el, ev);
-            });
-        });
+    _maximize: function() {
+        this.$dialog_box.find('.modal-dialog').addClass('modal-maximized');
+        this.$dialog_box.find('.btn-maximize').hide();
+        this.$dialog_box.find('.btn-minimize').show();
     },
-    /**
-        Initializes the popup.
-
-        @return The result returned by start().
-    */
+    _minimize: function() {
+        this.$dialog_box.find('.modal-dialog').removeClass('modal-maximized');
+        this.$dialog_box.find('.btn-minimize').hide();
+        this.$dialog_box.find('.btn-maximize').show();
+    },
     init_dialog: function() {
         var self = this;
         var options = _.extend({}, this.dialog_options);
@@ -157,16 +128,16 @@ instance.web.Dialog = instance.web.Widget.extend({
             'backdrop': false,
             'keyboard': true,
         });
-        if (options.size !== 'large'){
+        if (options.size !== 'large') {
             var dialog_class_size = this.$dialog_box.find('.modal-lg').removeClass('modal-lg');
-            if (options.size === 'small'){
+            if (options.size === 'small') {
                 dialog_class_size.addClass('modal-sm');
             }
         }
 
         this.$el.appendTo(this.$dialog_box.find(".modal-body"));
         var $dialog_content = this.$dialog_box.find('.modal-content');
-        if (options.dialogClass){
+        if (options.dialogClass) {
             $dialog_content.find(".modal-body").addClass(options.dialogClass);
         }
         $dialog_content.openerpClass();
@@ -180,9 +151,6 @@ instance.web.Dialog = instance.web.Widget.extend({
         var res = this.start();
         return res;
     },
-    /**
-        Closes (hide) the popup, if destroy_on_close was passed to the constructor, it will be destroyed instead.
-    */
     close: function(reason) {
         if (this.dialog_inited && !this.__tmp_dialog_hiding) {
             $('.tooltip').remove(); //remove open tooltip if any to prevent them staying when modal has disappeared
@@ -203,9 +171,6 @@ instance.web.Dialog = instance.web.Widget.extend({
             this.__tmp_dialog_closing = undefined;
         }
     },
-    /**
-        Destroys the popup, also closes it.
-    */
     destroy: function (reason) {
         this.$buttons.remove();
         var self = this;
@@ -218,21 +183,14 @@ instance.web.Dialog = instance.web.Widget.extend({
             this.__tmp_dialog_destroying = undefined;
         }
         if (this.dialog_inited && !this.isDestroyed() && this.$el.is(":data(bs.modal)")) {
-            //we need this to put the instruction to remove modal from DOM at the end
-            //of the queue, otherwise it might already have been removed before the modal-backdrop
-            //is removed when pressing escape key
             var $element = this.$dialog_box;
             setTimeout(function () {
-                //remove modal from list of opened modal since we just destroy it
                 var modal_list_index = $.inArray($element, opened_modal);
                 if (modal_list_index > -1){
                     opened_modal.splice(modal_list_index,1)[0].remove();
                 }
                 if (opened_modal.length > 0){
-                    //we still have other opened modal so we should focus it
                     opened_modal[opened_modal.length-1].focus();
-                    //keep class modal-open (deleted by bootstrap hide fnct) on body 
-                    //to allow scrolling inside the modal
                     $('body').addClass('modal-open');
                 }
             },0);
@@ -240,6 +198,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         this._super();
     }
 });
+
 
 instance.web.CrashManager = instance.web.Class.extend({
     init: function() {
