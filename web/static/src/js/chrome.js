@@ -113,6 +113,23 @@ instance.web.Dialog = instance.web.Widget.extend({
         this.$dialog_box.find('.btn-minimize').hide();
         this.$dialog_box.find('.btn-maximize').show();
     },
+    _add_buttons: function(buttons) {
+        var self = this;
+        var $customButons = this.$buttons.find('.oe_dialog_custom_buttons').empty();
+        _.each(buttons, function(fn, text) {
+            // buttons can be object or array
+            var oe_link_class = fn.oe_link_class;
+            if (!_.isFunction(fn)) {
+                text = fn.text;
+                fn = fn.click;
+            }
+            var $but = $(QWeb.render('WidgetButton', { widget : { string: text, node: { attrs: {'class': oe_link_class} }}}));
+            $customButons.append($but);
+            $but.on('click', function(ev) {
+                fn.call(self.$el, ev);
+            });
+        });
+    },
     init_dialog: function() {
         var self = this;
         var options = _.extend({}, this.dialog_options);
