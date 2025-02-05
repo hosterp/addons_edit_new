@@ -321,7 +321,9 @@
                     cells[el.getAttribute('data-field')] = el;
                 });
             } else {
-                console.error('Invalid row:', $row);
+//                console.error('Invalid row:', $row);
+                   $('.modal').modal('hide');
+
             }
             return cells;
         },
