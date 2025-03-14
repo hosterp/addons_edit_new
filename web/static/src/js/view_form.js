@@ -746,9 +746,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     on_save_and_create: function(e) {
         var self = this;
         var confirmMessage = "Do you want to save and create a new record?";
-        if (!confirm(confirmMessage)) {
-            return;
-        }
+//        if (!confirm(confirmMessage)) {
+//            return;
+//        }
         $(e.target).attr("disabled", true);
         return this.save().done(function(result) {
             self.trigger("save", result);
